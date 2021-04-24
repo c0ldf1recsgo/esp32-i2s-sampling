@@ -22,7 +22,7 @@ const int headerSize = 44;
 
 int32_t time_travel = 0;
 int C_INDEX = 0;
-
+int32_t g_latest_audio_timestamp = 0;
 void CaptureSamples();
 
 QueueHandle_t xQueueAudioWave;
@@ -40,7 +40,7 @@ namespace {
   
   // Mark as volatile so we can check in a while loop to see if
   // any samples have arrived yet.
-  volatile int32_t g_latest_audio_timestamp = 0;
+//  volatile int32_t g_latest_audio_timestamp = 0;
   
   // Our callback buffer for collecting a chunk of data
   volatile int16_t recording_buffer[BUFFER_SIZE];
@@ -84,7 +84,7 @@ void AudioRecordingTask(void *pvParameters) {
 
   while (1) {
 
-    if(g_latest_audio_timestamp>=20000){
+    if(time_travel>=20){
       vTaskDelete(Task1);
     }
     
@@ -92,7 +92,7 @@ void AudioRecordingTask(void *pvParameters) {
       xQueueSend(xQueueAudioWave, &sample, 0);
       CaptureSamples();
       audio_idx = 0;
-      Serial.println(g_latest_audio_timestamp);
+//      Serial.println(g_latest_audio_timestamp);
     }
 
     i2s_read(I2S_NUM_0, &i2s_data, 2, &bytes_read, portMAX_DELAY );
@@ -272,14 +272,16 @@ void i2s_adc_data_scale(uint8_t * d_buff, uint8_t* s_buff, uint32_t len)
 }
 
 void loop() {
-  if(g_latest_audio_timestamp>=20000){
-    file.write((const byte*) g_audio_capture_buffer, kAudioCaptureBufferSize);
+  if(time_travel>=20){
+    file.write((const byte*) g_audio_capture_buffer, BUFFER_SIZE * 16);
     file.close();
     listSPIFFS();
     Serial.println("Recorded !!!");
     vTaskDelete(NULL);
   }
   else if (C_INDEX == 7680){
-    file.write((const byte*) g_audio_capture_buffer, kAudioCaptureBufferSize);
-  }
+    g_latest_audio_timestamp = 0;
+    time_travel++;
+    file.write((const byte*) g_audio_capture_buffer, BUFFER_SIZE * 16);
+    Serial.println(time_travel);
 }

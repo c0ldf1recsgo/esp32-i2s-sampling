@@ -281,6 +281,5 @@ void loop() {
   }
   else if (C_INDEX == 7680){
     file.write((const byte*) g_audio_capture_buffer, kAudioCaptureBufferSize);
-    Serial.println("Written 7680 !!!");
   }
 }

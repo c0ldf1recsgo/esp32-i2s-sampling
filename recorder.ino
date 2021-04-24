@@ -283,4 +283,5 @@ void loop() {
     time_travel++;
     file.write((const byte*) g_audio_capture_buffer, BUFFER_SIZE * 16);
     Serial.println(time_travel);
+  }
 }

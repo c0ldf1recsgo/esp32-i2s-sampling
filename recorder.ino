@@ -280,7 +280,6 @@ void loop() {
     vTaskDelete(NULL);
   }
   else if (C_INDEX == 7680){
-    g_latest_audio_timestamp = 0;
     time_travel++;
     file.write((const byte*) g_audio_capture_buffer, BUFFER_SIZE * 16);
     Serial.println(time_travel);

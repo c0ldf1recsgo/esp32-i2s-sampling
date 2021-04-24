@@ -283,28 +283,4 @@ void loop() {
     file.write((const byte*) g_audio_capture_buffer, kAudioCaptureBufferSize);
     Serial.println("Written 7680 !!!");
   }
-  /*
-//  int16_t wave = 0;
-//  for (int i = 0; i < QueueAudioWaveSize; i++) {
-//    if (xQueueReceive(xQueueAudioWave, &wave, 0) == pdTRUE) {
-//      Serial.println(wave);
-//    }
-//  }  
-  if (time_travel < 50) {
-        file.write((const byte*) g_audio_capture_buffer, 512);
-        time_travel += 1;
-        ets_printf("%u time", time_travel);
-  }
-  else{
-    vTaskDelete(Task1);
-    file.close();
-   
-    listSPIFFS();
-    Serial.println("Recorded !!!");
-//    vTaskDelete(Task1);
-  }
-  */
-//  vTaskDelete(Task1);
-//  Serial.print("loop() running on core ");
-//  Serial.println(xPortGetCoreID());
 }
